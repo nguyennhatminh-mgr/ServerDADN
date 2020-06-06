@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+    style(type='text/css').
+      .container{
+        display: flex;
+        align-items: center;
+      }
+      .left,.right{
+        width: 50%;
+      }
+      
+  body
+    block content

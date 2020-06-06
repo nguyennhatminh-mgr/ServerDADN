@@ -1,0 +1,38 @@
+extends layout
+
+block content
+  div(class="container")
+    div(class="left")
+      h1= title
+      p Welcome to #{title}
+      form(action="/testpublish", method="post")
+        label(for="") Id device
+        br
+        input(name="id_device1" placeholder="Id of device")
+        br
+        label(for="") Value
+        br
+        input(name="value1" placeholder="Value of device")
+        br
+        br
+        label(for="") Id device
+        br
+        input(name="id_device2" placeholder="Id of device")
+        br
+        label(for="") Value
+        br
+        input(name="value2" placeholder="Value of device")
+        br
+        br
+        button(type="submit") Publish
+
+    div(style="margin-top: 20px",class="right")
+      h1 List device
+      ul 
+        each value in listDevices
+          li= value.id_device
+          if value.type === "light"
+            p= "state: " + value.values[0]
+            p= "value: " + value.values[1]
+          if value.type === "sensor"
+            p= "value: " + value.values[0]

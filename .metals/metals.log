@@ -1,0 +1,8 @@
+INFO  started: Metals version 0.8.4 in workspace 'E:\Visual studio code\LearnNodeJS\LearnReactNative\TestSever'
+INFO  time: initialize in 0.82s
+WARN  no build tool detected in workspace 'E:\Visual studio code\LearnNodeJS\LearnReactNative\TestSever'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+INFO  shutting down Metals
+2020.05.21 08:25:37 INFO  started: Metals version 0.9.0 in workspace 'E:\Learn_Study\Các môn h?c trong các h?c k?\HK-192-2020-2021\TT ?? án ?a ngành\ProjectDA\ServerDADN'
+2020.05.21 08:25:39 INFO  time: initialize in 1.39s
+2020.05.21 08:25:42 WARN  no build tool detected in workspace 'E:\Learn_Study\Các môn h?c trong các h?c k?\HK-192-2020-2021\TT ?? án ?a ngành\ProjectDA\ServerDADN'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2020.05.21 17:29:45 INFO  shutting down Metals

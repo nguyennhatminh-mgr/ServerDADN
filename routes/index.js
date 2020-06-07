@@ -32,7 +32,8 @@ var listDevices = [
   },
 ];
 
-var clientGetData = mqtt.connect('mqtt://broker.mqttdashboard.com');
+// var clientGetData = mqtt.connect('mqtt://broker.mqttdashboard.com');
+var clientGetData = mqtt.connect('mqtt://52.240.52.68:1883');
 var clientControlDevice = mqtt.connect('mqtt://broker.mqttdashboard.com');
 
 clientGetData.subscribe(topicGetData);
@@ -43,42 +44,46 @@ var mes = JSON.stringify( [{id_device: "id1",values: ["1","3"]},{id_device: "id3
 // clientGetData.publish(topicGetData,mes);
 clientControlDevice.publish(topicControlDevice,mes);
 
-clientGetData.on('message', (topic,message) => {
-  var value_mes = JSON.parse( message.toString());
-  console.log(value_mes);
-  console.log(topic);
-  let query = `INSERT INTO VALUEOFDEVICE VALUES `;
-  for(let i = 0; i < value_mes.length - 1; i++){
-    const id_value = createUniqueId();
-    let time = new Date();
-    let received_time = time.getTime();
+// clientGetData.on('message', (topic,message) => {
+//   var value_mes = JSON.parse( message.toString());
+//   console.log(value_mes);
+//   console.log(topic);
+//   let query = `INSERT INTO VALUEOFDEVICE VALUES `;
+//   for(let i = 0; i < value_mes.length - 1; i++){
+//     const id_value = createUniqueId();
+//     let time = new Date();
+//     let received_time = time.getTime();
 
-    if(value_mes[i].values.length>1){
-      query += `('${id_value}','${value_mes[i].id_device}','${value_mes[i].values[0]}-${value_mes[i].values[1]}',${received_time}),`;
-    }else{
-      query += `('${id_value}','${value_mes[i].id_device}','${value_mes[i].values[0]}',${received_time}),`;
-    }
-  }
-  const lastDevice = value_mes.length - 1;
-  const id_value = createUniqueId();
-  let time = new Date();
-  let received_time = time.getTime();
+//     if(value_mes[i].values.length>1){
+//       query += `('${id_value}','${value_mes[i].id_device}','${value_mes[i].values[0]}-${value_mes[i].values[1]}',${received_time}),`;
+//     }else{
+//       query += `('${id_value}','${value_mes[i].id_device}','${value_mes[i].values[0]}',${received_time}),`;
+//     }
+//   }
+//   const lastDevice = value_mes.length - 1;
+//   const id_value = createUniqueId();
+//   let time = new Date();
+//   let received_time = time.getTime();
 
-  if(value_mes[lastDevice].values.length>1){
-    query += `('${id_value}','${value_mes[lastDevice].id_device}','${value_mes[lastDevice].values[0]}-${value_mes[lastDevice].values[1]}',${received_time});`;
-  }else{
-    query += `('${id_value}','${value_mes[lastDevice].id_device}','${value_mes[lastDevice].values[0]}',${received_time});`;
-  }
-  connect.getConnection((error,connection) => {
-    if(error) throw error;
-    connection.query(query,(err,rows) => {
-      connection.release();
-      if(err) throw err;
-      console.log(rows);
-    });
-  });
-  console.log(query);
-});
+//   if(value_mes[lastDevice].values.length>1){
+//     query += `('${id_value}','${value_mes[lastDevice].id_device}','${value_mes[lastDevice].values[0]}-${value_mes[lastDevice].values[1]}',${received_time});`;
+//   }else{
+//     query += `('${id_value}','${value_mes[lastDevice].id_device}','${value_mes[lastDevice].values[0]}',${received_time});`;
+//   }
+//   connect.getConnection((error,connection) => {
+//     if(error) throw error;
+//     connection.query(query,(err,rows) => {
+//       connection.release();
+//       if(err) throw err;
+//       console.log(rows);
+//     });
+//   });
+//   console.log(query);
+// });
+
+clientGetData.on('message',(topic,message) => {
+  console.log(message.toString());
+})
 
 clientControlDevice.on('message', (topic,message) => {
   var value_mes = JSON.parse( message.toString());

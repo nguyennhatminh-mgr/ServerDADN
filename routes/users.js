@@ -18,10 +18,10 @@ router.post('/login',(req,res,next) => {
   let query = `SELECT * FROM MYUSER WHERE username='${username}' and password='${password}'`;
 
   connect.getConnection((err,connection) => {
-    if(err) throw err;
+    if(err) console.log(err);
     connection.query(query,(err,rows) => {
       connection.release();
-      if(err) throw err;
+      if(err) console.log(err);
 
       if(rows.length < 1){
         res.send(LOGIN_FAIL);
@@ -38,10 +38,10 @@ router.post('/usernameexist',(req,res,next) => {
   const username = req.body.username;
   let query = `SELECT * FROM MYUSER WHERE username='${username}'`;
   connect.getConnection((err,connection) => {
-    if(err) throw err;
+    if(err) console.log( err);
     connection.query(query,(err,rows) => {
       connection.release();
-      if(err) throw err;
+      if(err) console.log( err);
 
       if(rows.length >= 1){
         res.send(SIGNUP_FAIL);
@@ -56,10 +56,10 @@ router.post('/usernameexist',(req,res,next) => {
 router.get('/listroomnotowner',(req,res,next) => {
   let query = `SELECT * FROM room WHERE id not IN ( SELECT id_room FROM adminroom)`;
   connect.getConnection((err,connection) => {
-    if(err) throw err;
+    if(err) console.log( err);
     connection.query(query,(err,rows) => {
       connection.release();
-      if(err) throw err;
+      if(err) console.log( err);
 
       res.send(rows);
     });
@@ -77,10 +77,10 @@ router.post('/signup',(req,res,next) => {
   const query = `CALL sign_up('${id_user}','${realname}','${username}','${password}','${id_room}')`;
 
   connect.getConnection((err,connection) => {
-    if(err) throw err;
+    if(err) console.log( err);
     connection.query(query,(error,rows) => {
       connection.release();
-      if(error) throw error;
+      if(err) console.log( error);
       res.send(SUCCESS);
     });
   }); 
@@ -98,10 +98,10 @@ router.get('/info/:id',(req,res,next) => {
   }
 
   connect.getConnection((err,connection) => {
-    if(err) throw err;
+    if(err) console.log( err);
     connection.query(query,(err,rows) => {
       connection.release();
-      if(err) throw err;
+      if(err) console.log( err);
       res.send(rows);
     });
   });

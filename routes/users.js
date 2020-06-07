@@ -15,7 +15,7 @@ router.post('/login',(req,res,next) => {
   let password = req.body.password;
   password = md5(password);
 
-  let query = `SELECT * FROM MYUSER WHERE username='${username}' and password='${password}'`;
+  let query = `SELECT * FROM myuser WHERE username='${username}' and password='${password}'`;
 
   connect.getConnection((err,connection) => {
     if(err) console.log(err);
@@ -33,10 +33,10 @@ router.post('/login',(req,res,next) => {
   });
 });
 
-// SELECT * FROM `room` WHERE id not IN ( SELECT id_room FROM adminroom )
+// SELECT * FROM `room` WHERE id not IN ( SELECT id_room FROM AdminRoom )
 router.post('/usernameexist',(req,res,next) => {
   const username = req.body.username;
-  let query = `SELECT * FROM MYUSER WHERE username='${username}'`;
+  let query = `SELECT * FROM myuser WHERE username='${username}'`;
   connect.getConnection((err,connection) => {
     if(err) console.log( err);
     connection.query(query,(err,rows) => {
@@ -54,7 +54,7 @@ router.post('/usernameexist',(req,res,next) => {
 });
 
 router.get('/listroomnotowner',(req,res,next) => {
-  let query = `SELECT * FROM room WHERE id not IN ( SELECT id_room FROM adminroom)`;
+  let query = `SELECT * FROM Room WHERE id not IN ( SELECT id_room FROM AdminRoom)`;
   connect.getConnection((err,connection) => {
     if(err) console.log( err);
     connection.query(query,(err,rows) => {
@@ -91,10 +91,10 @@ router.get('/info/:id',(req,res,next) => {
   let query = "";
 
   if(user_id === ID_ADMIN){
-    query = `SELECT * FROM MYUSER WHERE id ='${user_id}'`;
+    query = `SELECT * FROM myuser WHERE id ='${user_id}'`;
   }
   else{
-    query = `SELECT * FROM myuser,adminroom,room WHERE myuser.id = '${user_id}' and adminroom.id_user = myuser.id and adminroom.id_room = room.id`;
+    query = `SELECT * FROM myuser,AdminRoom,Room WHERE myuser.id = '${user_id}' and AdminRoom.id_user = myuser.id and AdminRoom.id_room = room.id`;
   }
 
   connect.getConnection((err,connection) => {

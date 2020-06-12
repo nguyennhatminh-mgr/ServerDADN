@@ -26,7 +26,7 @@ router.post("/addRoom", (req, res)=>{
     var valueInsert = [req.body.id, req.body.name];
 
     query = "INSERT INTO Room(id,name) VALUES (?);";
-
+    //console.log(valueInsert);
     connect.getConnection((err,connection) => {
         if(err) res.send("fail");
         connection.query(query, [valueInsert] ,(err,rows) => {

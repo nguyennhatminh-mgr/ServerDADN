@@ -7,6 +7,7 @@ const connect = require('../connect/connect');
 
 const topicGetData = "TOPIC_GET_DATA";
 const topicControlDevice = "TOPIC_CONTROL_DEVICE";
+const topicOffical = "Topic/Light";
 
 // Gia su co list device
 var listDevices = [
@@ -35,11 +36,16 @@ var listDevices = [
 // var clientGetData = mqtt.connect('mqtt://broker.mqttdashboard.com');
 var clientGetData = mqtt.connect('mqtt://52.240.52.68:1883');
 var clientControlDevice = mqtt.connect('mqtt://broker.mqttdashboard.com');
+var clientOffical = mqtt.connect('tcp://13.76.250.158:1883',{username: "BKvm2", password: "Hcmut_CSE_2020"});
 
 clientGetData.subscribe(topicGetData);
 clientControlDevice.subscribe(topicControlDevice);
 
+clientOffical.subscribe(topicOffical);
+
 var mes = JSON.stringify( [{id_device: "id1",values: ["1","3"]},{id_device: "id3",values: ["3.24"]}]);
+
+
 
 // clientGetData.publish(topicGetData,mes);
 clientControlDevice.publish(topicControlDevice,mes);
@@ -89,6 +95,10 @@ clientControlDevice.on('message', (topic,message) => {
   var value_mes = JSON.parse( message.toString());
   console.log(value_mes);
   console.log(topic);
+});
+
+clientOffical.on('message',(topic,message) => {
+  console.log(message.toString());
 });
 
 clientGetData.on('connect', function(){

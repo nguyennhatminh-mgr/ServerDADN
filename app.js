@@ -11,6 +11,7 @@ var historyRouter = require('./routes/history');
 var addDeviceRouter = require('./routes/adddevice');
 var viewRoomRouter = require('./routes/viewroom');
 var setLightLevel = require('./routes/setlightlevel');
+var listenLightValue = require('./mqtt/subscriber');
 
 var app = express();
 
@@ -31,6 +32,9 @@ app.use('/',historyRouter);
 app.use('/',addDeviceRouter);
 app.use('/',viewRoomRouter);
 app.use('/',setLightLevel);
+
+//listen MQTT...
+listenLightValue();
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

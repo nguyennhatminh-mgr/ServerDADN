@@ -11,7 +11,7 @@ const topicGetData = "TOPIC_GET_DATA";
 const topicControlDevice = "TOPIC_CONTROL_DEVICE";
 const topicOffical = "Topic/Light";
 
-subscribeLightD();
+// subscribeLightD();
 
 // Gia su co list device
 var listDevices = [

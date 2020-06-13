@@ -94,7 +94,7 @@ router.get('/info/:id',(req,res,next) => {
     query = `SELECT * FROM myuser WHERE id ='${user_id}'`;
   }
   else{
-    query = `SELECT * FROM myuser,AdminRoom,Room WHERE myuser.id = '${user_id}' and AdminRoom.id_user = myuser.id and AdminRoom.id_room = room.id`;
+    query = `SELECT * FROM myuser,AdminRoom,Room WHERE myuser.id = '${user_id}' and AdminRoom.id_user = myuser.id and AdminRoom.id_room = Room.id`;
   }
 
   connect.getConnection((err,connection) => {
@@ -107,6 +107,67 @@ router.get('/info/:id',(req,res,next) => {
   });
 });
 
+router.post("/editname",(req,res,next) => {
+  const id = req.body.id;
+  const realname = req.body.realname;
+  const username = req.body.username;
+
+  const query = `UPDATE myuser SET realname='${realname}',username='${username}' WHERE id='${id}'`;
+
+  connect.getConnection((err,connection) => {
+    if(err) console.log(err);
+    connection.query(query,(error,rows) => {
+      connection.release();
+      if(error) console.log(error);
+      res.send(SUCCESS);
+    })
+  });
+});
+
+router.post("/checkpassword",(req,res,next) => {
+  const id = req.body.id;
+  let oldPass = req.body.oldPass;
+  oldPass = md5(oldPass);
+
+  const query = `SELECT * FROM myuser WHERE id='${id}' AND password='${oldPass}'`;
+
+  connect.getConnection((err,connection) => {
+    if(err) console.log(err);
+    connection.query(query,(error,rows) => {
+      connection.release();
+      if(error) console.log(error);
+      res.send(rows);
+    })
+  });
+});
+
+router.post("/changepassword",(req,res,next) => {
+  const id = req.body.id;
+  let newPass = req.body.newPass;
+  newPass = md5(newPass);
+
+  const query = `UPDATE myuser SET password='${newPass}' WHERE id='${id}'`;
+
+  connect.getConnection((err,connection) => {
+    if(err) console.log(err);
+    connection.query(query,(error,rows) => {
+      connection.release();
+      if(error) console.log(error);
+      res.send(SUCCESS);
+    })
+  });
+});
+
+
 module.exports = router;
 
-console.log(md5('123456'));
+// const queryCall = `CALL sign_up('aaaaa1','Nhật Minh','nhatminh1@gmail.com','e10adc3949ba59abbe56e057f20f883e','R08')`;
+
+// connect.getConnection((err,connection) => {
+//   if(err) console.log( err);
+//   connection.query(queryCall,(err,rows) => {  
+//     connection.release();     
+//     if(err) console.log( err);      
+//     console.log(rows); 
+//   });
+// });

@@ -5,9 +5,13 @@ var {createUniqueId} = require('../utilities/createId');
 
 const connect = require('../connect/connect');
 
+const {subscribeLightD} = require('../routes/test');
+
 const topicGetData = "TOPIC_GET_DATA";
 const topicControlDevice = "TOPIC_CONTROL_DEVICE";
 const topicOffical = "Topic/Light";
+
+subscribeLightD();
 
 // Gia su co list device
 var listDevices = [

@@ -14,10 +14,11 @@ function listenLight() {
         message = JSON.parse(message.toString());
         mydate = new Date();
         query = "INSERT INTO ValueOfDevice(id_device, value, received_time) Values (?);";
-        valueInsert = [message[0].device_id, message[0].values, mydate];
+        //valueInsert = [message[0].device_id, message[0].values, mydate];
+        var valueInsert = message.map(item=>[item.device_id, item.values, mydate]);
         connect.getConnection((err,connection) => {
             if(err) console.log(err);
-            connection.query(query, [valueInsert] ,(err, result)=> {
+            connection.query(query, valueInsert ,(err, result)=> {
               if(err) console.log(err);
             });
           });

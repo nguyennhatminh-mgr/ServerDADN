@@ -20,7 +20,7 @@ router.get("/listroomcontrol/:id",(req,res,next) => {
     const id = req.params.id;
     let query = "";
     if(id === ID_ADMIN){
-        query = `SELECT id as id_room,name FROM Room`;
+        query = `SELECT id as id_room, name FROM Room`;
     }
     else{
         query = `SELECT id_user,id_room,name 

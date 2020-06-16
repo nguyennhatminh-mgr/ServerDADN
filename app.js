@@ -12,6 +12,9 @@ var addDeviceRouter = require('./routes/adddevice');
 var viewRoomRouter = require('./routes/viewroom');
 var setLightLevel = require('./routes/setlightlevel');
 var listenLightValue = require('./mqtt/subscriber');
+const {controlAuto} = require('./mqtt/controlauto');
+
+const {subscribeLightD} = require('./routes/test');
 
 var app = express();
 
@@ -35,6 +38,8 @@ app.use('/',setLightLevel);
 
 //listen MQTT...
 listenLightValue();
+// controlAuto("Light12",471);
+subscribeLightD();   
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

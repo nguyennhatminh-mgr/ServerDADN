@@ -22,6 +22,7 @@ router.post('/login',(req,res,next) => {
     connection.query(query,(err,rows) => {
       connection.release();
       if(err) console.log(err);
+      // console.log(username);
 
       if(rows.length < 1){
         res.send(LOGIN_FAIL);
@@ -139,7 +140,7 @@ router.post("/checkpassword",(req,res,next) => {
       res.send(rows);
     })
   });
-});
+});  
 
 router.post("/changepassword",(req,res,next) => {
   const id = req.body.id;

@@ -13,7 +13,8 @@ function listenLight() {
     );
     client.on('message' , (topic, message)=>{
       if(topic == "Topic/Light"){
-        message = JSON.parse(message.toString());
+        try{
+          message = JSON.parse(message.toString());
 
         //validate data before insert to database
         for(let i = 0; i< message.length;i++){
@@ -28,29 +29,34 @@ function listenLight() {
         
         mydate = new Date();
 
-        query = `INSERT INTO ValueOfDevice(id_device, value, received_time) Values ?;`;
 
-        var valueInsert = message.map(item=>[item.device_id, item.values, mydate]);
+          query = `INSERT INTO ValueOfDevice(id_device, value, received_time) Values ?;`;
 
-        connect.getConnection((err,connection) => {
+          var valueInsert = message.map(item=>[item.device_id, item.values, mydate]);
+
+          connect.getConnection((err,connection) => {
             if(err) console.log(err);
             connection.query(query, [valueInsert] ,(err, result)=> {
               if(err) console.log(err);
             });  
           });  
-        
-        console.log(message);
-        
-        // Minh add
-        for(let i=0; i < message.length; i++){
-          controlAuto(message[i].device_id, message[i].values[0]);
+          
+          console.log(message);
+          
+          // Minh add
+          for(let i=0; i < message.length; i++){
+            controlAuto(message[i].device_id, message[i].values[0]);
+          }
+          // end Minh add
         }
-        // end Minh add
+        catch (err){
+          console.log(err);
+        }
 
-      }else if (topic == "Topic/LightD"){
+      }else if (topic == "Topic/LightD"){  
         console.log(topic);
-        console.log(message.toString());
-      }  
+        console.log(message.toString());  
+      }
     })
 
     client.on('connect', ()=>{

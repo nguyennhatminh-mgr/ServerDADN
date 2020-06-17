@@ -36,7 +36,7 @@ const controlAuto = (device_id,value_of_device) => {
                 if (err) console.log(err);
                 connection.query(queryControl,[valueInsert],(error,rows) => {
                     if(error) console.log(error);
-                    console.log("CALL Success");
+                    // console.log("CALL Success");
                 });
             });
             
@@ -49,14 +49,16 @@ const controlAuto = (device_id,value_of_device) => {
                 connection.query(query_getListDevice,(error,rows) => {
                     if(error) console.log(error);
                     let listDevice = rows;
-                    console.log("Here");
-                    console.log(listDevice); 
+                    // console.log("Here");
+                    // console.log(listDevice); 
                     let message = [];
                     for(let i = 0; i < listDevice.length; i++){
                         message.push({device_id: listDevice[i].id, values: ["1",valueInsert[1].toString()]});
                     }
-                    message = JSON.stringify(message);
-                    client.publish(TOPIC,message);
+                    if(message.length > 0){
+                        message = JSON.stringify(message);
+                        client.publish(TOPIC,message);
+                    }
                 });
             }); 
         });

@@ -16,9 +16,16 @@ function listenLight() {
         message = JSON.parse(message.toString());
 
         //validate data before insert to database
-        // for(let i = 0; i< message.length;i++){
-        //   if(!(typeof message[i].values == 'number')) message.splice(i,1);
-        // }
+        for(let i = 0; i< message.length;i++){
+          try{
+            if(message[i].values > 1023 || message[i].values < 0) message.splice(i,1);
+          }catch(err){
+            message.splice(i,1);
+          }finally{
+            if(message.length < 1 ) return;
+          }
+        }
+        
         mydate = new Date();
 
         query = `INSERT INTO ValueOfDevice(id_device, value, received_time) Values ?;`;
@@ -27,7 +34,7 @@ function listenLight() {
 
         connect.getConnection((err,connection) => {
             if(err) console.log(err);
-            connection.query(query, valueInsert ,(err, result)=> {
+            connection.query(query, [valueInsert] ,(err, result)=> {
               if(err) console.log(err);
             });  
           });  

@@ -10,7 +10,7 @@ router.get("/viewHistory/:id_user",(req,res) => {
     var query = "";
     if(req.params.id_user == adminID.ID_ADMIN) query = `SELECT Room.id,Room.name,myuser.realname as owner FROM Room JOIN AdminRoom ON Room.id = AdminRoom.id_room JOIN myuser ON AdminRoom.id_user = myuser.id;`;
     else query = `SELECT Room.id,Room.name,myuser.realname as owner FROM Room JOIN AdminRoom ON Room.id = AdminRoom.id_room JOIN myuser ON AdminRoom.id_user = myuser.id where myuser.id="${req.params.id_user}";`;
-    console.log(query);
+    // console.log(query);
     connect.getConnection((err,connection) => {
         if(err) {res.send("fail");
         console.log("connect fail");

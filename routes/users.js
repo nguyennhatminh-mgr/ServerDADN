@@ -140,7 +140,7 @@ router.post("/checkpassword",(req,res,next) => {
       res.send(rows);
     })
   });
-});
+});  
 
 router.post("/changepassword",(req,res,next) => {
   const id = req.body.id;

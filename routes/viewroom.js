@@ -9,14 +9,21 @@ router.get('/viewroom/:id',(req,res,next) => {
     const user_id = req.params.id;
     let query = "";
     if(user_id === ID_ADMIN){
-        query  = `SELECT m.id as userID, m.realname, r.name, d.id, v.value, v.received_time as received_time from myuser m 
-        join adminroom ad on m.id = ad.id_user join room r on r.id = ad.id_room join device d on d.id_room = ad.id_room 
-        join valueofdevice v on v.id_device = d.id and v.received_time = (SELECT max(received_time) from valueofdevice)  group by v.id_device`;
+        query  = `SELECT m.id as userID, m.realname as userName, r.name as roomName, d.id as deviceID, d.type as type, v.value as value, 
+        v.received_time as time from myuser m join adminroom ad 
+        on m.id = ad.id_user join room r on r.id = ad.id_room join device d 
+        on d.id_room = ad.id_room join valueofdevice v on v.id_device = d.id 
+        inner join (SELECT max(received_time) as time, id_device from valueofdevice GROUP by id_device) 
+        maxtable on v.id_device = maxtable.id_device and v.received_time = maxtable.time`;
+        //query = `SELECT id as userID FROM myuser where id !="${user_id}"`;
     }
     else{
-        query = `SELECT m.id as userID, m.realname, r.name, d.id, v.value, max(v.received_time) as received_time from myuser m 
-        join adminroom ad on m.id = ad.id_user join room r on r.id = ad.id_room join device d on d.id_room = ad.id_room 
-        join valueofdevice v on v.id_device = d.id where v.received_time = (SELECT max(received_time) from valueofdevice) and m.id = "${user_id}"`;
+        query = `SELECT m.id as userID, m.realname as userName, r.name as roomName, d.id as deviceID, d.type as type, v.value as value, 
+        v.received_time as time from myuser m join adminroom ad 
+        on m.id = ad.id_user join room r on r.id = ad.id_room join device d 
+        on d.id_room = ad.id_room join valueofdevice v on v.id_device = d.id 
+        inner join (SELECT max(received_time) as time, id_device from valueofdevice GROUP by id_device) 
+        maxtable on v.id_device = maxtable.id_device and v.received_time = maxtable.time where m.id = "${user_id}"`;
     }
     // Your code here
     connect.getConnection((err, con)=>{

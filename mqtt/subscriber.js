@@ -37,17 +37,19 @@ function listenLight() {
           connect.getConnection((err,connection) => {
             if(err) console.log(err);
             connection.query(query, [valueInsert] ,(err, result)=> {
+              connection.release();
               if(err) console.log(err);
+               // Minh add
+              for(let i=0; i < message.length; i++){
+                controlAuto(message[i].device_id, message[i].values[0]);
+              }
+              // end Minh add
             });  
           });  
           
           console.log(message);
           
-          // Minh add
-          for(let i=0; i < message.length; i++){
-            controlAuto(message[i].device_id, message[i].values[0]);
-          }
-          // end Minh add
+         
         }
         catch (err){
           console.log(err);

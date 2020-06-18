@@ -18,11 +18,11 @@ const subscribeLightD = () => {
     // });      
 
     clientOfficial.on('connect',() => {  
-        clientOfficial.publish(topic_light,'[{ "device_id": "Light","values": ["800"]},{ "device_id": "Light12","values": ["600"]}]');
+        // clientOfficial.publish(topic_light,'[{ "device_id": "Light","values": ["800"]},{ "device_id": "Light12","values": ["600"]}]');
     });  
     // clientOfficial.subscribe(topic_speaker);    
     
-}
+}  
 
 module.exports = {
     subscribeLightD

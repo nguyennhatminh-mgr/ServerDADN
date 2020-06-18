@@ -17,6 +17,7 @@ const controlAuto = (device_id,value_of_device) => {
     connect.getConnection((err,connection) => {
         if(err) console.log(err);
         connection.query(queryGetLightLevel,(error,rows) => {
+            connection.release();
             if(error) console.log(error);
             let light_level = rows[0].value;
 
@@ -35,32 +36,34 @@ const controlAuto = (device_id,value_of_device) => {
             connect.getConnection((err,connection) => {
                 if (err) console.log(err);
                 connection.query(queryControl,[valueInsert],(error,rows) => {
+                    connection.release();
                     if(error) console.log(error);
                     // console.log("CALL Success");
+                    let query_getListDevice = `select id,type,Device.id_room
+                    from (SELECT id_room FROM lightiot.Device where id='${device_id}'  and type='sensor') as temp, lightiot.Device
+                    where temp.id_room = Device.id_room and type='light'`;
+        
+                    connect.getConnection((err,connection) => {
+                        if (err) console.log(err);
+                        connection.query(query_getListDevice,(error,rows) => {
+                            connection.release();
+                            if(error) console.log(error);
+                            let listDevice = rows;
+                            // console.log("Here");
+                            // console.log(listDevice); 
+                            let message = [];
+                            for(let i = 0; i < listDevice.length; i++){
+                                message.push({device_id: listDevice[i].id, values: ["1",valueInsert[1].toString()]});
+                            }
+                            if(message.length > 0){
+                                message = JSON.stringify(message);
+                                client.publish(TOPIC,message);
+                            }
+                        });
+                    }); 
                 });
             });
             
-            let query_getListDevice = `select id,type,Device.id_room
-            from (SELECT id_room FROM lightiot.Device where id='${device_id}'  and type='sensor') as temp, lightiot.Device
-            where temp.id_room = Device.id_room and type='light'`;
-
-            connect.getConnection((err,connection) => {
-                if (err) console.log(err);
-                connection.query(query_getListDevice,(error,rows) => {
-                    if(error) console.log(error);
-                    let listDevice = rows;
-                    // console.log("Here");
-                    // console.log(listDevice); 
-                    let message = [];
-                    for(let i = 0; i < listDevice.length; i++){
-                        message.push({device_id: listDevice[i].id, values: ["1",valueInsert[1].toString()]});
-                    }
-                    if(message.length > 0){
-                        message = JSON.stringify(message);
-                        client.publish(TOPIC,message);
-                    }
-                });
-            }); 
         });
     })
 

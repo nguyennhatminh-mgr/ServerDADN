@@ -2,12 +2,14 @@ const mqtt = require('mqtt');
 
 const connect = require('../connect/connect');
 
-var client = mqtt.connect('tcp://13.76.250.158:1883',
-    {
-      username:"BKvm2",
-      password:"Hcmut_CSE_2020"
-    }
-);
+// var client = mqtt.connect('tcp://13.76.250.158:1883',
+//     {
+//       username:"BKvm2",
+//       password:"Hcmut_CSE_2020"
+//     }
+// );
+
+var client = mqtt.connect('mqtt://52.240.52.68:1883');
 
 const TOPIC = 'Topic/LightD';
 
@@ -54,6 +56,15 @@ const controlAuto = (device_id,value_of_device) => {
                             let message = [];
                             for(let i = 0; i < listDevice.length; i++){
                                 message.push({device_id: listDevice[i].id, values: ["1",valueInsert[1].toString()]});
+
+                                let query = `update lightiot.Device set value = ${valueInsert[1]} where id = '${listDevice[i].id}'`;
+                                connect.getConnection((err,connection) => {
+                                if(err) console.log(err);
+                                    connection.query(query,(error,rows) => {
+                                        connection.release();
+                                        if(error) console.log(error);
+                                    });
+                                })
                             }
                             if(message.length > 0){
                                 message = JSON.stringify(message);

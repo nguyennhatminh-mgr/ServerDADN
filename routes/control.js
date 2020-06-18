@@ -9,12 +9,14 @@ const {ID_ADMIN} = require('../utilities/constant');
 var connect = require('../connect/connect');
 
 const TOPIC_LIGHTD = "Topic/LightD";
-let client = mqtt.connect('tcp://13.76.250.158:1883',
-    {
-        username:"BKvm2",
-        password:"Hcmut_CSE_2020"
-    }
-);
+// let client = mqtt.connect('tcp://13.76.250.158:1883',
+//     {
+//         username:"BKvm2",
+//         password:"Hcmut_CSE_2020"
+//     }
+// );
+
+var client = mqtt.connect('mqtt://52.240.52.68:1883');
 
 router.get("/listroomcontrol/:id",(req,res,next) => {
     const id = req.params.id;
@@ -59,7 +61,7 @@ router.get("/listlight/:id_room",(req,res,next) => {
 
 router.get("/getlight/:id_light",(req,res,next) => {
     const id_light = req.params.id_light;
-    let query = `SELECT Device.id,id_room,value,received_time
+    let query = `SELECT Device.id,id_room,ValueOfDevice.value,received_time
         FROM lightiot.Device,lightiot.ValueOfDevice 
         where Device.id='${id_light}' and type='light' and Device.id=ValueOfDevice.id_device
         order by received_time desc
@@ -97,7 +99,15 @@ router.post("/controllight",(req,res,next) => {
             connection.release();
             if(err) console.log(err);
             else{
-                res.send("SUCCESS");
+                let query = `update lightiot.Device set value = ${value} where id = '${device_id}'`;
+                connect.getConnection((err,connection) => {
+                    if(err) console.log(err);
+                    connection.query(query,(error,rows) => {
+                        connection.release();
+                        if(error) console.log(error);
+                        res.send("SUCCESS");
+                    });
+                })
             }
         })
     })

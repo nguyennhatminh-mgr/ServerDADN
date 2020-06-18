@@ -33,7 +33,7 @@ router.get('/viewroom/:id',(req,res,next) => {
             if(err) throw err;
             return res.send(row);           
         });
-    })
+    }) 
 }); 
 // Your code here
 

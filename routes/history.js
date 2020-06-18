@@ -17,7 +17,7 @@ router.get("/viewHistory/:id_user",(req,res) => {
     }
         console.log("ok");
         connection.query(query,(err,result) => {
-            //connection.release();
+            connection.release();
             console.log(err)
             if(err) res.send(err);
             //res.send("ok");
@@ -34,6 +34,7 @@ router.get("/viewSensorHistory/:id_room",(req,res) => {
             res.send("fail");
         };
         connection.query(query, (err,rows) => {
+            connection.release();
             if(err) res.send("fail");
             else res.send(rows);
         });
@@ -47,6 +48,7 @@ router.get("/viewLightHistory/:id_room",(req,res) => {
             res.send("fail");
         };
         connection.query(query, (err,rows) => {
+            connection.release();
             if(err) res.send("fail");
             else res.send(rows);
         });
@@ -62,6 +64,7 @@ router.get("/getDataHistory/:id_device/:time",(req,res)=>{
      +`"${time}`+` 23:59:59")`
      +` order by received_time desc limit 5;`;
     connect.getConnection((err,connection) => {
+        connection.release();
         if(err) {
             res.send("connect fail");
         };

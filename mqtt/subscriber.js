@@ -19,7 +19,7 @@ function listenLight() {
         //validate data before insert to database
         for(let i = 0; i< message.length;i++){
           try{
-            if(message[i].values > 1023 || message[i].values < 0) message.splice(i,1);
+            if(message[i].values[0] > 1023 || message[i].values[0] < 0) message.splice(i,1);
           }catch(err){
             message.splice(i,1);
           }finally{
@@ -32,7 +32,7 @@ function listenLight() {
 
           query = `INSERT INTO ValueOfDevice(id_device, value, received_time) Values ?;`;
 
-          var valueInsert = message.map(item=>[item.device_id, item.values, mydate]);
+          var valueInsert = message.map(item=>[item.device_id, item.values[0], mydate]);
 
           connect.getConnection((err,connection) => {
             if(err) console.log(err);

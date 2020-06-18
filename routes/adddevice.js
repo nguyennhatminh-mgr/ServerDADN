@@ -16,6 +16,7 @@ router.post("/addDevice", (req,res) => {
             res.send("fail");
         };
         connection.query(query,[valueInsert] ,(err,rows) => {
+            connection.release();
             console.log(err);
             if(err) res.send("fail");
             else res.send("ok");
@@ -32,7 +33,7 @@ router.post("/addRoom", (req, res)=>{
     connect.getConnection((err,connection) => {
         if(err) res.send("fail");
         connection.query(query, [valueInsert] ,(err,rows) => {
-            //connection.release();
+            connection.release();
             if(err) res.send(err);
             res.send("ok");
         });

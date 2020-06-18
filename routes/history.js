@@ -10,14 +10,14 @@ router.get("/viewHistory/:id_user",(req,res) => {
     var query = "";
     if(req.params.id_user == adminID.ID_ADMIN) query = `SELECT Room.id,Room.name,myuser.realname as owner FROM Room JOIN AdminRoom ON Room.id = AdminRoom.id_room JOIN myuser ON AdminRoom.id_user = myuser.id;`;
     else query = `SELECT Room.id,Room.name,myuser.realname as owner FROM Room JOIN AdminRoom ON Room.id = AdminRoom.id_room JOIN myuser ON AdminRoom.id_user = myuser.id where myuser.id="${req.params.id_user}";`;
-    console.log(query);
+    // console.log(query);
     connect.getConnection((err,connection) => {
         if(err) {res.send("fail");
         console.log("connect fail");
     }
         console.log("ok");
         connection.query(query,(err,result) => {
-            //connection.release();
+            connection.release();
             console.log(err)
             if(err) res.send(err);
             //res.send("ok");
@@ -34,6 +34,7 @@ router.get("/viewSensorHistory/:id_room",(req,res) => {
             res.send("fail");
         };
         connection.query(query, (err,rows) => {
+            connection.release();
             if(err) res.send("fail");
             else res.send(rows);
         });
@@ -47,6 +48,7 @@ router.get("/viewLightHistory/:id_room",(req,res) => {
             res.send("fail");
         };
         connection.query(query, (err,rows) => {
+            connection.release();
             if(err) res.send("fail");
             else res.send(rows);
         });
@@ -62,6 +64,7 @@ router.get("/getDataHistory/:id_device/:time",(req,res)=>{
      +`"${time}`+` 23:59:59")`
      +` order by received_time desc limit 5;`;
     connect.getConnection((err,connection) => {
+        connection.release();
         if(err) {
             res.send("connect fail");
         };

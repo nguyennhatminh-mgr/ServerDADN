@@ -5,16 +5,19 @@ var router = express.Router();
 var connect = require('../connect/connect');
 
 router.post("/addDevice", (req,res) => {
-    var valueInsert = [req.body.id, req.body.type ,req.body.id_room];
+    let myDate = new Date();
+    var valueInsert = [req.body.id, req.body.type ,req.body.id_room, myDate];
 
-    query = "INSERT INTO Device(id, type, id_room) VALUES (?);";
+    
+    query = "call lightiot.insertDevice(?)";
     console.log(req.body)
     connect.getConnection((err,connection) => {
         if(err) {
             res.send("fail");
         };
-        connection.query(query, [valueInsert] ,(err,rows) => {
-            //connection.release();
+        connection.query(query,[valueInsert] ,(err,rows) => {
+            connection.release();
+            console.log(err);
             if(err) res.send("fail");
             else res.send("ok");
         });
@@ -30,7 +33,7 @@ router.post("/addRoom", (req, res)=>{
     connect.getConnection((err,connection) => {
         if(err) res.send("fail");
         connection.query(query, [valueInsert] ,(err,rows) => {
-            //connection.release();
+            connection.release();
             if(err) res.send(err);
             res.send("ok");
         });

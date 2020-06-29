@@ -11,8 +11,15 @@ const LOGIN_FAIL = 'LOGIN_FAIL';
 const SUCCESS = 'SUCCESS';
 
 router.post('/login',(req,res,next) => {
-  const username = req.body.username;
+  let username = req.body.username;
   let password = req.body.password;
+  if(username === null){
+    username="";
+  }
+  if(password === null){
+    password = "";
+  }
+  
   password = md5(password); 
 
   let query = `SELECT * FROM myuser WHERE username='${username}' and password='${password}'`;
@@ -22,7 +29,7 @@ router.post('/login',(req,res,next) => {
     connection.query(query,(err,rows) => {
       connection.release();
       if(err) console.log(err);
-
+      
       if(rows.length < 1){
         res.send(LOGIN_FAIL);
       }
@@ -139,7 +146,7 @@ router.post("/checkpassword",(req,res,next) => {
       res.send(rows);
     })
   });
-});
+});  
 
 router.post("/changepassword",(req,res,next) => {
   const id = req.body.id;

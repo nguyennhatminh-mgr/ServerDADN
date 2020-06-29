@@ -39,7 +39,7 @@ app.use('/',setLightLevel);
 //listen MQTT...
 listenLightValue();
 // controlAuto("Light12",471);
-subscribeLightD();   
+// subscribeLightD();   
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

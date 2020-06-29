@@ -1,5 +1,4 @@
 var express = require('express');
-const mqtt = require('mqtt');
 
 var router = express.Router();
 
@@ -7,16 +6,9 @@ const {ID_ADMIN} = require('../utilities/constant');
 
 //  variable connect is used to connect to database
 var connect = require('../connect/connect');
+const {client} = require('../connect/mqttconfig');
 
-const TOPIC_LIGHTD = "Topic/LightD";
-// let client = mqtt.connect('tcp://13.76.250.158:1883',
-//     {
-//         username:"BKvm2",
-//         password:"Hcmut_CSE_2020"
-//     }
-// );
-
-var client = mqtt.connect('mqtt://52.240.52.68:1883');
+const {TOPIC_LIGHTD} = require('../connect/mqttconfig');
 
 router.get("/listroomcontrol/:id",(req,res,next) => {
     const id = req.params.id;
@@ -112,6 +104,28 @@ router.post("/controllight",(req,res,next) => {
         })
     })
 
+});
+
+router.get('/notification/:id_user',(req,res,next) => {
+    let id_user = req.params.id_user;
+    let query = "";
+    if (id_user == ID_ADMIN){
+        query = `SELECT * FROM lightiot.notification
+        order by createdAt desc`;
+    }
+    else{
+        query = `SELECT * FROM lightiot.notification
+        where id_user='${id_user}'
+        order by createdAt desc`;
+    }
+    connect.getConnection((err,connection) => {
+        if(err) console.log(err);
+        connection.query(query,(error,rows) => {
+            connection.release();
+            if(error) console.log(error);
+            res.send(rows);
+        });
+    })
 });
 
 module.exports = router;

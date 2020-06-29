@@ -1,10 +1,11 @@
-const mqtt = require('mqtt');
+
 var connect = require('../connect/connect');
 
 const {controlAuto} = require('./controlauto');
+const {client} = require('../connect/mqttconfig');
 
 function listenLight() {
-    var client = mqtt.connect('mqtt://52.240.52.68:1883');
+    // var client = mqtt.connect('mqtt://52.240.52.68:1883');
     // var client = mqtt.connect('tcp://13.76.250.158:1883',
     // {
     //   username:"BKvm2",
@@ -16,18 +17,18 @@ function listenLight() {
         try{
           message = JSON.parse(message.toString());
 
-        //validate data before insert to database
-        for(let i = 0; i< message.length;i++){
-          try{
-            if(message[i].values[0] > 1023 || message[i].values[0] < 0) message.splice(i,1);
-          }catch(err){
-            message.splice(i,1);
-          }finally{
-            if(message.length < 1 ) return;
+          //validate data before insert to database
+          for(let i = 0; i< message.length;i++){
+            try{
+              if(message[i].values[0] > 1023 || message[i].values[0] < 0) message.splice(i,1);
+            }catch(err){
+              message.splice(i,1);
+            }finally{
+              if(message.length < 1 ) return;
+            }
           }
-        }
         
-        mydate = new Date();
+          mydate = new Date();
 
 
           query = `INSERT INTO ValueOfDevice(id_device, value, received_time) Values ?;`;
@@ -50,7 +51,6 @@ function listenLight() {
           
           console.log(message);
           
-         
         }
         catch (err){
           console.log(err);

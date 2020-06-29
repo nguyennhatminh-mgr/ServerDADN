@@ -28,10 +28,15 @@ router.get('/listroominfo/:id',(req,res,next) => {
     let query = "";
     const userID = req.params.id;
     if(userID === ID_ADMIN){
-        query = `select m.id as userID, m.realname, ad.id_room from myuser m, AdminRoom ad where m.id != '123AFFK89HM2' group by m.id`;
+        query = `select m.id, m.realname, r.name from 
+        myuser m join AdminRoom ad on m.id = ad.id_user
+        join Room r on ad.id_room = r.id;`;
     }
     else{
-        query = `select m.id as userID, m.realname, ad.id_room from myuser m, AdminRoom ad where m.id = '${userID}' group by m.id `;
+        query = `select m.id, m.realname, r.name from 
+        myuser m join AdminRoom ad on m.id = ad.id_user
+        join Room r on ad.id_room = r.id
+        where m.id = "${userID}"; `;
     }
     connect.getConnection((err, con)=>{
         if(err) throw err;
@@ -44,3 +49,4 @@ router.get('/listroominfo/:id',(req,res,next) => {
 }); 
 
 module.exports = router;
+

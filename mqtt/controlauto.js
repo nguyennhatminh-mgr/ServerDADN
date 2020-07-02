@@ -39,15 +39,16 @@ const controlAuto = (device_id,value_of_device) => {
                     // from (SELECT id_room FROM lightiot.Device where id='${device_id}'  and type='sensor') as temp, lightiot.Device
                     // where temp.id_room = Device.id_room and type='light'`;
 
-                    let queryInsertNotification = `Insert into notification (id_user,content,status,createdAt) values (?)`;
+                    let queryInsertNotification = `Insert into notification (id_user,content,status,createdAt,id_room) values (?)`;
                     
                     let room_name = rows[0].name;
                     let id_user = rows[0].id_user;
+                    let id_room = rows[0].id_room;
                     let contentNotification = "";
                     if(value_of_device < light_level){
                         contentNotification = `Light intensity of room ${room_name} is lower than threshold`;
                         let date = new Date();
-                        let valueInsert = [id_user,contentNotification,0,date];
+                        let valueInsert = [id_user,contentNotification,0,date,id_room];
                         connect.getConnection((err,connection) => {
                             if(err) console.log(err);
                             connection.query(queryInsertNotification,[valueInsert],(error,rows) => {

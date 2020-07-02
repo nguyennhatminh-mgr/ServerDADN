@@ -62,7 +62,7 @@ router.get("/getDataHistory/:id_device/:time",(req,res)=>{
      + `${id_device}" AND (received_time between "${time}`
      +` 00:00:00" AND `
      +`"${time}`+` 23:59:59")`
-     +` order by received_time desc limit 5;`;
+     +` order by received_time;`;
     connect.getConnection((err,connection) => {
         connection.release();
         if(err) {

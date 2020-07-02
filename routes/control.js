@@ -9,6 +9,7 @@ var connect = require('../connect/connect');
 const {client} = require('../connect/mqttconfig');
 
 const {TOPIC_LIGHTD} = require('../connect/mqttconfig');
+const { route } = require('./viewroom');
 
 router.get("/listroomcontrol/:id",(req,res,next) => {
     const id = req.params.id;
@@ -110,12 +111,42 @@ router.get('/notification/:id_user',(req,res,next) => {
     let id_user = req.params.id_user;
     let query = "";
     if (id_user == ID_ADMIN){
-        query = `SELECT * FROM lightiot.notification
+        query = `SELECT lightiot.notification.id as id_notification,id_user,content,status,createdAt,id_room,name
+        FROM lightiot.notification,lightiot.Room
+        where lightiot.notification.id_room = lightiot.Room.id
+        order by createdAt desc
+        LIMIT 5`;
+    }
+    else{
+        query = `SELECT lightiot.notification.id as id_notification,id_user,content,status,createdAt,id_room,name
+        FROM lightiot.notification,lightiot.Room
+        where id_user='${id_user}' and lightiot.notification.id_room = lightiot.Room.id
+        order by createdAt desc
+        LIMIT 5`;
+    }
+    connect.getConnection((err,connection) => {
+        if(err) console.log(err);
+        connection.query(query,(error,rows) => {
+            connection.release();
+            if(error) console.log(error);
+            res.send(rows);
+        });
+    })
+});
+
+router.get('/allnotification/:id_user',(req,res,next) => {
+    let id_user = req.params.id_user;
+    let query = "";
+    if (id_user == ID_ADMIN){
+        query = `SELECT lightiot.notification.id as id_notification,id_user,content,status,createdAt,id_room,name
+        FROM lightiot.notification,lightiot.Room
+        where lightiot.notification.id_room = lightiot.Room.id
         order by createdAt desc`;
     }
     else{
-        query = `SELECT * FROM lightiot.notification
-        where id_user='${id_user}'
+        query = `SELECT lightiot.notification.id as id_notification,id_user,content,status,createdAt,id_room,name
+        FROM lightiot.notification,lightiot.Room
+        where id_user='${id_user}' and lightiot.notification.id_room = lightiot.Room.id
         order by createdAt desc`;
     }
     connect.getConnection((err,connection) => {
@@ -124,6 +155,19 @@ router.get('/notification/:id_user',(req,res,next) => {
             connection.release();
             if(error) console.log(error);
             res.send(rows);
+        });
+    })
+});
+
+router.get("/updatestatusnotification/:id",(req,res,next) => {
+    let id = req.params.id;
+    let query = `UPDATE lightiot.notification set status=1 where id=${id}`;
+    connect.getConnection((err,connection) => {
+        if(err) console.log(err);
+        connection.query(query,(error,rows) => {
+            connection.release();
+            if(error) console.log(error);
+            res.send("SUCCESS");
         });
     })
 });

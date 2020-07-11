@@ -15,6 +15,8 @@ function listenLight() {
     client.on('message' , (topic, message)=>{
       if(topic == "Topic/Light"){
         try{
+          console.log(message.toString());
+
           message = JSON.parse(message.toString());
 
           //validate data before insert to database
@@ -49,7 +51,6 @@ function listenLight() {
             });  
           });  
           
-          console.log(message);
           
         }
         catch (err){

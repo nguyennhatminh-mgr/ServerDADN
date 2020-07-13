@@ -21,8 +21,8 @@ const transporter = nodeEmailer.createTransport({
   }
 });
 
-
-// dadn2020lightiot
+// Email for DADN
+// dadn2020lightiot@gmail.com
 // dadn2020123
 
 const client = mqtt.connect('mqtt://52.240.52.68:1883');

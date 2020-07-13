@@ -5,6 +5,7 @@ var md5 = require('md5');
 var connect = require('../connect/connect');
 var {createUniqueId} = require('../utilities/createId');
 var {ID_ADMIN} = require('../utilities/constant');
+var {transporter} = require('../connect/mqttconfig');
 
 const SIGNUP_FAIL = 'SIGNUP_FAIL';
 const LOGIN_FAIL = 'LOGIN_FAIL';
@@ -165,16 +166,62 @@ router.post("/changepassword",(req,res,next) => {
   });
 });
 
+router.post("/forgotpassword",(req,res,next) => {
+  const email = req.body.email;
+  const newPass = createUniqueId();
+
+  const query = `SELECT * FROM myuser where username = '${email}'`;
+
+  connect.getConnection((err,connection) => {
+    if(err) console.log(err);
+    connection.query(query,(error,rows) => {
+      connection.release();
+      if(error) console.log(error);
+      if(rows.length < 1){
+        res.send("FAILED");
+        return;
+      }
+      let user = rows[0];
+      let pass = md5(newPass);
+
+      const queryUpdatePass = `UPDATE myuser SET password = '${pass}' where id='${user.id}'`;
+      connect.getConnection((err,connection) => {
+        if(err) console.log(err);
+        connection.query(queryUpdatePass,(error,rows) => {
+          connection.release();
+          if(error) console.log(error);
+
+          let contentEmail = `
+            Dear ${user.realname},\n
+            New password of you is: ${newPass}.\n
+            Please remember it carefully.Next, use this password to login, and then, change to new password.\n
+            Best regards,
+            DAND2020
+          `;
+          
+          const mailOptions = {
+            from : "dadn2020lightiot@gmail.com",
+            to : email,
+            subject: "FORGOT PASSWORD",
+            text: contentEmail
+          };
+
+          transporter.sendMail(mailOptions,(err,info) => {
+              if(err){
+                console.log(err);
+              }
+              else{
+                  console.log("Send email : " + info.response);
+                  res.send(SUCCESS);
+              }
+          });
+        })
+      });
+    })
+  });
+
+});
+
 
 module.exports = router;
 
-// const queryCall = `CALL sign_up('aaaaa1','Nhật Minh','nhatminh1@gmail.com','e10adc3949ba59abbe56e057f20f883e','R08')`;
-
-// connect.getConnection((err,connection) => {
-//   if(err) console.log( err);
-//   connection.query(queryCall,(err,rows) => {  
-//     connection.release();     
-//     if(err) console.log( err);      
-//     console.log(rows); 
-//   });
-// });

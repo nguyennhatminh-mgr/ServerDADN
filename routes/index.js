@@ -80,26 +80,26 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Hello Express',listDevices: listDevices});
 });
 
-router.post('/testpublish', (req,res,next) => {
-  var {id_device1,value1,id_device2,value2} = req.body;
-  var result = [];
+// router.post('/testpublish', (req,res,next) => {
+//   var {id_device1,value1,id_device2,value2} = req.body;
+//   var result = [];
 
-  value1 = value1.split(',');
-  value2 = value2.split(',');
+//   value1 = value1.split(',');
+//   value2 = value2.split(',');
 
-  var device1 = {};
-  device1.id_device = id_device1;
-  device1.values = value1;
+//   var device1 = {};
+//   device1.id_device = id_device1;
+//   device1.values = value1;
 
-  var device2 = {};
-  device2.id_device = id_device2;
-  device2.values = value2;
+//   var device2 = {};
+//   device2.id_device = id_device2;
+//   device2.values = value2;
 
-  result.push(device1);
-  result.push(device2);
+//   result.push(device1);
+//   result.push(device2);
 
-  res.render('index', { title: 'Hello Express',listDevices:listDevices});
-});
+//   res.render('index', { title: 'Hello Express',listDevices:listDevices});
+// });
 
 module.exports = router;
 

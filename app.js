@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 var controlRouter = require('./routes/control');
 var historyRouter = require('./routes/history');
 var addDeviceRouter = require('./routes/adddevice');
+var removeDeviceRouter = require('./routes/removedevice');
 var viewRoomRouter = require('./routes/viewroom');
 var setLightLevel = require('./routes/setlightlevel');
 var listenLightValue = require('./mqtt/subscriber');
@@ -33,6 +34,7 @@ app.use('/users', usersRouter);
 app.use('/',controlRouter);
 app.use('/',historyRouter);
 app.use('/',addDeviceRouter);
+app.use('/',removeDeviceRouter);
 app.use('/',viewRoomRouter);
 app.use('/',setLightLevel);
 

@@ -172,4 +172,17 @@ router.get("/updatestatusnotification/:id",(req,res,next) => {
     })
 });
 
+router.get("/numnotification/:id_user",(req,res,next) => {
+    let id_user = req.params.id_user;
+    let query = `SELECT COUNT(*) AS num_notification FROM notification WHERE id_user='${id_user}' AND status = 0`;
+    connect.getConnection((err,connection) => {
+        if(err) console.log(err);
+        connection.query(query,(error,rows) => {
+            connection.release();
+            if(error) console.log(error);
+            res.send(rows);
+        });
+    })
+});
+
 module.exports = router;
